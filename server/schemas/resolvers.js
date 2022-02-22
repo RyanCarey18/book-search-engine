@@ -14,20 +14,20 @@ const resolvers = {
 
   Mutation: {
     login: async (parent, { email, password }) => {
-      const profile = await Profile.findOne({ email });
-
-      if (!profile) {
-        throw new AuthenticationError("No profile with this email found!");
+      const user = await User.findOne({ email });
+      console.log(user);
+      if (!user) {
+        throw new AuthenticationError("Wrong Email or Password");
       }
 
-      const correctPw = await profile.isCorrectPassword(password);
+      const correctPw = await user.isCorrectPassword(password);
 
       if (!correctPw) {
-        throw new AuthenticationError("Incorrect password!");
+        throw new AuthenticationError("Wrong Email or Password");
       }
 
-      const token = signToken(profile);
-      return { token, profile };
+      const token = signToken(user);
+      return { token, user };
     },
 
     addUser: async (parent, { username, email, password }) => {
